@@ -23,10 +23,10 @@ The goals / steps of this project are the following:
 [image2]: ./camera_cal_undistorted/calibration1.jpg "Undistorted"
 [image3]: ./test_images_undistorted/test1.jpg "Road Transformed"
 [image4]: ./test_images_sobel/straight_lines1.jpg "Binary Example"
-[image5]: ./examples/warped_straight_lines.jpg "Warp Example"
-[image6]: ./examples/color_fit_lines.jpg "Fit Visual"
-[image7]: ./examples/example_output.jpg "Output"
-[video1]: ./project_video.mp4 "Video"
+[image5]: ./test_images_perspective/straight_lines1.jpg "Warp Example"
+[image6]: ./test_images_polynomial_fit/straight_lines1.jpg "Fit Visual"
+[image7]: ./test_images_curvature/straight_lines1.jpg "Output"
+[video1]: ./test_videos_result/project_video.mp4 "Video"
 
 ## [Rubric](https://review.udacity.com/#!/rubrics/571/view) Points
 
@@ -64,11 +64,15 @@ To demonstrate this step, I will describe how I apply the distortion correction 
 
 I used a combination of color and gradient thresholds to generate a binary image. In particular, I used the sobel operation in the x direction and saturation thresholding. Here's an example of my output for this step.
 
-![alt text][image3]
+This is `Step 2` in the code.
+
+![alt text][image4]
 
 #### 3. Describe how (and identify where in your code) you performed a perspective transform and provide an example of a transformed image.
 
 To apply the perspective transform, I chose to hardcode the source and destination points in the following manner:
+
+This is `Step 3` in the code.
 
 (Note that this applies to images 1280 x 720 which is our case).
 
@@ -79,25 +83,25 @@ To apply the perspective transform, I chose to hardcode the source and destinati
 | 250, 700      | 300, 700      |
 | 600, 450      | 300, 0        |
 
-I verified that my perspective transform was working as expected by drawing the `src` and `dst` points onto a test image and its warped counterpart to verify that the lines appear parallel in the warped image.
-
-![alt text][image4]
-
-#### 4. Describe how (and identify where in your code) you identified lane-line pixels and fit their positions with a polynomial?
-
-Then I did some other stuff and fit my lane lines with a 2nd order polynomial kinda like this:
+An example of the perspective transform:
 
 ![alt text][image5]
 
+#### 4. Describe how (and identify where in your code) you identified lane-line pixels and fit their positions with a polynomial?
+
+Then I found the columns with the most number of 'active pixels' and using the sliding windows technique, fit a second order polynomial to the perspective tranformed result. This is `Step 4` in the code.
+
+![alt text][image6]
+
 #### 5. Describe how (and identify where in your code) you calculated the radius of curvature of the lane and the position of the vehicle with respect to center.
 
-I did this in lines # through # in my code in `my_other_file.py`
+Using the polynomial fit from step 4 (converted to meters), I evaluated the curvature at the bottom of the image using the formula for curvature. The position of the vehicle is found by calculating the distance from the center of the lane to the center of the image. This is `Step 5` in the code.
 
 #### 6. Provide an example image of your result plotted back down onto the road such that the lane area is identified clearly.
 
-I implemented this step in lines # through # in my code in `yet_another_file.py` in the function `map_lane()`.  Here is an example of my result on a test image:
+This is also part of `Step 5` in the code. I take the polynomial fit and warp it back using the reverse transform of `Step 3`. This is then combined with the original image to produce the following:
 
-![alt text][image6]
+![alt text][image7]
 
 ---
 
@@ -113,4 +117,6 @@ Here's a [link to my video result](./project_video.mp4)
 
 #### 1. Briefly discuss any problems / issues you faced in your implementation of this project.  Where will your pipeline likely fail?  What could you do to make it more robust?
 
-Here I'll talk about the approach I took, what techniques I used, what worked and why, where the pipeline might fail and how I might improve it if I were going to pursue this project further.  
+Originally, I had implemented the thresholding using only the Sobel operator in the x direction. This caused yellow lanes to be missed when there was a shadow. To remedy this, I added saturation thresholding which does a decent job detecting the yellow lanes.
+
+The pipeline still fails on the challenge video. In particular, it detects the center of the lane where there appears to a line as the actual lane edge. To make this more robust, I could ensure that the sides of the lane are a sufficient distance apart from each other, and implement some kind of 'memory' so that new frames remember where the old ones left off. That is, use the polynomial fit from the previous frame to guide the fit on the new frame since lanes are generally fairly continuous (or so I hope!).
