@@ -21,7 +21,7 @@ The goals / steps of this project are the following:
 
 [image1]: ./camera_cal/calibration1.jpg "Distorted"
 [image2]: ./camera_cal_undistorted/calibration1.jpg "Undistorted"
-[image3]: ./test_images_undistorted/test1.jpg "Road Transformed"
+[image3]: ./test_images_undistorted/straight_lines1.jpg "Road Transformed"
 [image4]: ./test_images_sobel/straight_lines1.jpg "Binary Example"
 [image5]: ./test_images_perspective/straight_lines1.jpg "Warp Example"
 [image6]: ./test_images_polynomial_fit/straight_lines1.jpg "Fit Visual"
@@ -109,7 +109,7 @@ This is also part of `Step 5` in the code. I take the polynomial fit and warp it
 
 #### 1. Provide a link to your final video output.  Your pipeline should perform reasonably well on the entire project video (wobbly lines are ok but no catastrophic failures that would cause the car to drive off the road!).
 
-Here's a [link to my video result](./project_video.mp4)
+Here's a [link to my video result](./test_videos_result/project_video.mp4)
 
 ---
 
